@@ -24,7 +24,7 @@ Program::Program() {
 Program::~Program() {
 }
 
-void Program::clear() {
+void Program::clear(EvalState & state) {
 	for (map<int, Statement *>::iterator it = code.begin(); it != code.end(); it++)
 		delete (*it).second;
 	code.clear();
