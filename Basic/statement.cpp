@@ -80,15 +80,18 @@ void PRINTstate::parseState(TokenScanner & scanner, string & line) {
 }
 
 void INPUTstate::execute(EvalState & state) {
-	cout << " ? ";
-	string str;
-	getline(cin, str);
-	try {
-		int value = stringToInteger(str);
-		state.setValue(varName, value);
-	}
-	catch (ErrorException &ex) {
-		cout << "INVALID NUMBER" << endl;
+	while (1) {
+		cout << " ? ";
+		string str;
+		getline(cin, str);
+		try {
+			int value = stringToInteger(str);
+			state.setValue(varName, value);
+			return;
+		}
+		catch (ErrorException &ex) {
+			cout << "INVALID NUMBER" << endl;
+		}
 	}
 }
 
