@@ -123,38 +123,50 @@ void IFstate::execute(EvalState & state) {
 	if (cmp == "<" && lhs->eval(state) < rhs->eval(state)
 		|| cmp == "=" && lhs->eval(state) == rhs->eval(state)
 		|| cmp == ">" && lhs->eval(state) > rhs->eval(state)) {
-		state.setValue("__lineNumber", lineNumber);
-		state.setValue("__haveGone", 1);
+		state.setValue("RUN", lineNumber);
+		state.setValue("GOTO", 1);
 	}
 }
 
 void IFstate::parseState(TokenScanner & scanner, string & line) {
 	TokenScanner tmpScanner;
+	tmpScanner.ignoreWhitespace();
+	tmpScanner.scanNumbers();
 	string tmp;
+	int pos, _pos;
 
-	tmp = scanner.nextToken();
-	tmpScanner.setInput(tmp);
-	lhs = parseExp(tmpScanner);
+	_pos = line.find("THEN");
+	if (_pos == std::string::npos) error("SYNTAX ERROR");
 
-	cmp = scanner.nextToken();
-	if (cmp != "<" && cmp != "=" && cmp != ">") error("SYNTAX ERROR");
-
-	tmp = scanner.nextToken();
-	tmpScanner.setInput(tmp);
-	rhs = parseExp(tmpScanner);
-
-	tmp = scanner.nextToken();
-	if (tmp != "THEN") error("SYNTAX ERROR");
-
-	string num = scanner.nextToken();
-	if (scanner.getTokenType(num) != NUMBER || scanner.hasMoreTokens())
-		error("SYNTAX ERROR");
+	if (line.find("<") != std::string::npos) pos = line.find("<");
+	else if (line.find("=") != std::string::npos) pos = line.find("=");
+	else if (line.find(">") != std::string::npos) pos = line.find(">");
 
 	try {
+		tmp = line.substr(line.find("IF") + 2, pos - line.find("IF") - 2);
+		tmpScanner.setInput(tmp);
+		lhs = parseExp(tmpScanner);
+
+		cmp = line.substr(pos, 1);
+		if (cmp != "<" && cmp != "=" && cmp != ">") error("SYNTAX ERROR");
+
+		tmp = line.substr(pos + 1, _pos - pos - 1);
+		tmpScanner.setInput(tmp);
+		rhs = parseExp(tmpScanner);
+
+		tmp = line.substr(_pos);
+		tmpScanner.setInput(tmp);
+		tmp = tmpScanner.nextToken();
+		if (tmp != "THEN") error("SYNTAX ERROR");
+
+		string num = tmpScanner.nextToken();
+		if (tmpScanner.getTokenType(num) != NUMBER || tmpScanner.hasMoreTokens())
+			error("SYNTAX ERROR");
+
 		lineNumber = stringToInteger(num);
 	}
-	catch (ErrorException) {
-		cout << "INVALID NUMBER" << endl;
+	catch (ErrorException &ex) {
+		cout << "SYNTAX ERROR" << endl;
 	}
 
 	whole = line;
