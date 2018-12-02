@@ -96,7 +96,7 @@ void processLine(string line, Program & program, EvalState & state) {
 		   switch (match) {
 			   case 0:program.run(state); break;
 			   case 1:program.list(); break;
-			   case 2:program.clear(); break;
+			   case 2:program.clear(state); break;
 			   case 3:exit(0); break;
 			   case 4:cout << "The editor needs help too. qwq" << endl; break;
 			   default:break;
