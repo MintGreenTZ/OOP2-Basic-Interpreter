@@ -142,7 +142,7 @@ public:
  * This command lists the steps in the program in numerical sequence.
  */
 
-   void Program::list();
+   void list();
 
 /*
  * Method: run
@@ -151,7 +151,7 @@ public:
  * This command lists the steps in the program in numerical sequence.
  */
 
-   void Program::run(EvalState & state);
+   void run(EvalState & state);
     
 private:
 
