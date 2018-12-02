@@ -54,7 +54,7 @@ public:
  * Removes all lines from the program.
  */
 
-   void clear();
+   void clear(EvalState & state);
 
 /*
  * Method: addSourceLine
@@ -156,7 +156,6 @@ public:
 private:
 
 	map<int, Statement *> code;
-	EvalState state;
 
 };
 
