@@ -1,3 +1,3 @@
-# OOP2-Basic-Interpreter
+# Basic-Interpreter
 
 SJTU OOP homework
